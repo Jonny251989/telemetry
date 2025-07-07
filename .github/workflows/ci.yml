@@ -2,7 +2,7 @@ name: telemetry-system CI/CD
 
 on:
   push:
-    branches: ["branch"]
+    branches: ["**"]
   pull_request:
     branches: ["**"]
 
