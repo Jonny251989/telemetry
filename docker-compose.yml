@@ -57,8 +57,10 @@ services:
       - telemetry_net
     command: 
       - /bin/sh
-      - -c
+      - -c  
       - |
+        ls -la ./
+        ls -la ./bin
         ls -la ${SOURCE_DIR}
         ls -la ${SOURCE_DIR}/bin
          mkdir -p /test_data
