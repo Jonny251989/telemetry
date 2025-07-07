@@ -6,7 +6,7 @@ networks:
 
 services:
   builder:
-    image:  jonnyrembo/telemetry-system:v1.0
+    image:  jonnyrembo/telemetry-system
     build: .
     volumes:
       - ./:/workspace:rw 
