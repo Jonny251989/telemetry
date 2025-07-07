@@ -15,3 +15,5 @@ target_link_libraries(${target}
     pthread
     Boost::system
 )
+
+add_test(NAME unit_tests COMMAND ${target})
