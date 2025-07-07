@@ -32,7 +32,7 @@ void UdpServer::handle_receive(const boost::system::error_code& error, size_t by
         send_response({2,0});
         return;
     }
-    uint64_t host_data = network_to_host<uint64_t>(std::move(recv_buffer_));
+    uint64_t host_data = network_to_host(std::move(recv_buffer_));
     std::optional<TelemetryData> data_opt = unpack_data(host_data);
 
     if (!data_opt) {
@@ -40,8 +40,8 @@ void UdpServer::handle_receive(const boost::system::error_code& error, size_t by
         send_response({1,0});
         return;
     }
-    bool is_valid = validator_.validate(*data_opt);
-    if (is_valid) {
+
+    if (bool is_valid = validator_.validate(*data_opt); is_valid){
         send_response({0,1});
     } else {
         send_response({0,0});

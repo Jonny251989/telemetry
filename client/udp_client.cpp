@@ -87,7 +87,7 @@ void UdpClient::send_udp_packet(uint64_t data) {
     if (endpoints_.empty()) {
         throw std::runtime_error("No endpoints available for sending");
     }
-    uint64_t net_data = host_to_network<uint64_t>(std::move(data));
+    uint64_t net_data = host_to_network(std::move(data));
     
     const auto endpoint = endpoints_.begin()->endpoint();
     
@@ -120,8 +120,6 @@ void UdpClient::analyse_server_response(std::array<uint8_t, 2> response) {
 std::array<uint8_t, 2> UdpClient::receive_udp_response() {
     std::array<uint8_t,2> response = {0};
     boost::system::error_code ec;
-
-    std::cerr << "Waiting for UDP response\n";
     
     size_t length = socket_.receive_from(
         boost::asio::buffer(response, sizeof(response)), 

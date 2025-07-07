@@ -13,8 +13,6 @@ RUN apt-get update && \
     iputils-ping \
     xvfb \
     nlohmann-json3-dev \
-    python3 \
-    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # Установка conan для управления зависимостями (опционально)

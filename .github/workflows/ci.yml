@@ -36,7 +36,14 @@ jobs:
         run: |
           cd /workspace/build
           ctest --output-on-failure --verbose
-
+      - name: Verify Docker installation
+        run: |
+          echo "PATH: $PATH"
+          which docker || true
+          docker --version || true
+          which docker-compose || true
+          docker-compose --version || true
+          ls -la /usr/bin/docker* /usr/local/bin/docker*
       - name: Start infrastructure and run functional tests
         run: |
           ls -la 
