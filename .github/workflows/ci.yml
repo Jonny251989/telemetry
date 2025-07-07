@@ -43,6 +43,7 @@ jobs:
 
       - name: Start infrastructure and run functional tests
         run: |
+          ls -la 
           docker-compose --profile test up
           TEST_EXIT_CODE=$?
           
