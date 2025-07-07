@@ -19,7 +19,7 @@ services:
   telemetry_server:
     image: jonnyrembo/telemetry-system:latest
     volumes:
-      - ./bin:/app:ro
+      - ./bin:/app:cached 
       - ./server/limits.json:/limits.json:ro
     command: 
       - /bin/sh
@@ -34,7 +34,7 @@ services:
   telemetry_client:
     image: jonnyrembo/telemetry-system:latest
     volumes:
-      - ./bin:/app:ro
+      - ./bin:/app:cached 
     networks:
       - telemetry_net
     command: ["sleep", "infinity"]
@@ -57,6 +57,6 @@ services:
           ls -la /app
           echo "Running functional tests..."
           /app/functional_tests
-          
+
     profiles: ["test"]
 
