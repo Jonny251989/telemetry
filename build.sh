@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+mkdir -p /workspace/build
 cd /workspace/build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
