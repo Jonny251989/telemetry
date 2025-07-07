@@ -43,13 +43,7 @@ jobs:
 
       - name: Start infrastructure and run functional tests
         run: |
-          docker compose up -d telemetry_server
-          
-          # Ожидание готовности сервера
-          timeout 30s sh -c 'until nc -zu localhost 12345; do sleep 1; done'
-          
-          # Запускаем функциональные тесты
-          docker compose run --rm functional_tests
+          docker-compose --profile test up
           TEST_EXIT_CODE=$?
           
           # Останавливаем контейнеры
