@@ -18,6 +18,8 @@ services:
 
   telemetry_server:
     image: jonnyrembo/telemetry-system:latest
+    environment:
+      - SOURCE_DIR=${SOURCE_DIR}
     volumes:
       - ./bin:/app:cached 
       - ./server/limits.json:/limits.json:ro
@@ -33,6 +35,8 @@ services:
 
   telemetry_client:
     image: jonnyrembo/telemetry-system:latest
+    environment:
+      - SOURCE_DIR=${SOURCE_DIR}
     volumes:
       - ./bin:/app:cached 
     networks:
@@ -42,6 +46,8 @@ services:
 
   functional_tests:
     image: jonnyrembo/telemetry-system:latest
+    environment:
+      - SOURCE_DIR=${SOURCE_DIR}
     volumes:
       - ./bin:/app:ro
     depends_on:
@@ -54,9 +60,9 @@ services:
       - |
          # Проверяем существование файлов перед выполнением
           echo "Contents of /app:"
-          ls -la 
+          ls -la /app/bin/tests
           echo "Running functional tests..."
-          /app/functional_tests
+          /app/bin/tests/functional_tests
 
     profiles: ["test"]
 
