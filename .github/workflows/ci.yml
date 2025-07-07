@@ -23,39 +23,47 @@ jobs:
         - ${{ github.workspace }}:/github/workspace  # Монтируем в стандартный путь
       options: --privileged
 
-    steps:
+   steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Prepare build environment
+        run: |
+          # Создаем необходимые директории
+          mkdir -p /workspace/build
+          mkdir -p /workspace/bin
+          ls -la /workspace
 
       - name: Build project
         run: |
+          cd workspace
           ./build.sh
 
       - name: Run all unit tests
         run: |
-          cd build
+          cd /workspace/build
           ctest --output-on-failure --verbose
 
       - name: Start infrastructure and run functional tests
         run: |
-          # Создаем .env файл с необходимыми переменными
-          echo "TELEMETRY_IMAGE=$DOCKER_USERNAME/telemetry-system" > .env
-          echo "SOURCE_DIR=$(pwd)" >> .env
+          cd /workspace
           
-          # Запускаем инфраструктуру в фоновом режиме
+          # Создаем .env файл
+          echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
+          echo "DOCKER_IMAGE=$DOCKER_IMAGE" >> .env
+          echo "SOURCE_DIR=/github/workspace" >> .env
+          
+          # Запускаем сервер
           docker compose up -d telemetry_server
           
-          # Ждем инициализации сервера (рекомендуемая задержка)
-          sleep 10
+          # Ожидание готовности сервера
+          timeout 30s sh -c 'until nc -z localhost 12345; do sleep 1; done'
           
-          # Запускаем функциональные тесты
+          # Запускаем тесты
           docker compose run --rm functional_tests
-          
-          # Сохраняем код возврата тестов
           TEST_EXIT_CODE=$?
           
-          # Останавливаем и очищаем инфраструктуру
+          # Останавливаем контейнеры
           docker compose down --volumes --remove-orphans
           
-          # Выходим с кодом возврата тестов (0 = успех, иначе ошибка)
           exit $TEST_EXIT_CODE
