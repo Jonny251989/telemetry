@@ -32,6 +32,7 @@ jobs:
           # Создаем необходимые директории
           mkdir -p /workspace/build
           mkdir -p /workspace/bin
+          ls -la
           ls -la /workspace
 
       - name: Build project
