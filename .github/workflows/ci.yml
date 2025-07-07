@@ -30,6 +30,8 @@ jobs:
       - name: Build project
         run: |
           # Создаем build-директорию перед запуском
+          ls -la /workspace
+          ls -la 
           mkdir -p /workspace/build
           ./build.sh  # Теперь скрипт будет работать
 

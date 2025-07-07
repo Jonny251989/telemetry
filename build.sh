@@ -1,21 +1,22 @@
 #!/bin/bash
 set -e
 
-cd /build
+cd /workspace/build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
 
-cp /build/server/telemetry_server /bin/
-cp /build/client/telemetry_client /bin/
-cp /build/tests/unit_tests/unit_tests /bin/
-cp /build/tests/functional_tests/functional_tests /bin/
+# Копирование артефактов с абсолютными путями
+cp /workspace/build/server/telemetry_server /workspace/bin/
+cp /workspace/build/client/telemetry_client /workspace/bin/
+cp /workspace/build/tests/unit_tests/unit_tests /workspace/bin/
+cp /workspace/build/tests/functional_tests/functional_tests /workspace/bin/
 
 # Копирование тестовых данных
-mkdir -p /bin/test_data
-cp -r /tests/functional_tests/test_data/* /bin/test_data/
-cp -r /tests/functional_tests/test_scripts/* /bin/test_data/
+mkdir -p /workspace/bin/test_data
+cp -r /workspace/tests/functional_tests/test_data/* /workspace/bin/test_data/
+cp -r /workspace/tests/functional_tests/test_scripts/* /workspace/bin/test_data/
 
 # Устанавливаем права на ВСЕ файлы
-chmod -R +x /bin/*
+chmod -R +x /workspace/bin/*
 
 echo "Build completed successfully!"
