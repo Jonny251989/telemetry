@@ -14,6 +14,5 @@ target_link_libraries(${target}
 target_include_directories(${target} PRIVATE
     ${nlohmann_json_SOURCE_DIR}
 )
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/limits.json 
                ${CMAKE_CURRENT_BINARY_DIR}/limits.json COPYONLY)
