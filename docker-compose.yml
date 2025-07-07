@@ -1,0 +1,59 @@
+version: '3.8'
+
+networks:
+  telemetry_net:
+    driver: bridge
+
+services:
+  builder:
+    image:  ${DOCKER_USERNAME}/telemetry-system:v1.0 
+    build: .
+    volumes:
+      - ./:/workspace:rw 
+      - ./bin:/output
+    command: /usr/local/bin/build.sh
+    profiles: ["build"]
+    networks:
+      - telemetry_net
+
+  telemetry_server:
+    image: telemetry-system
+    volumes:
+      - ./bin:/app:ro
+      - ./server/limits.json:/limits.json:ro
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        /app/telemetry_server 12345 /limits.json
+    ports:
+      - "12345:12345/udp"
+    networks:
+      - telemetry_net
+
+  telemetry_client:
+    image: telemetry-system
+    volumes:
+      - ./bin:/app:ro
+    networks:
+      - telemetry_net
+    command: ["sleep", "infinity"]
+    profiles: ["test"]
+
+  functional_tests:
+    image: telemetry-system
+    volumes:
+      - ./bin:/app:ro
+    depends_on:
+      - telemetry_server
+    networks:
+      - telemetry_net
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        mkdir -p /test_data
+        cp -r /app/test_data/* /test_data/
+        /app/functional_tests
+    profiles: ["test"]
+

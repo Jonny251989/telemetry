@@ -1,0 +1,61 @@
+name: telemetry-system CI/CD
+
+on:
+  push:
+    branches: ["branch"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image_version: ["1.0"]
+    container:
+      image: docker.io/jonnyrembo/telemetry-system:v1.0
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        COMMON_IMAGES_VERSION: "1.0"
+        SOURCE_DIR: ${{ github.workspace }}
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - ${{ github.workspace }}:/github/workspace  # Монтируем в стандартный путь
+      options: --privileged
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build project
+        run: |
+          ./build.sh
+
+      - name: Run all unit tests
+        run: |
+          cd build
+          ctest --output-on-failure --verbose
+
+      - name: Start infrastructure and run functional tests
+        run: |
+          # Создаем .env файл с необходимыми переменными
+          echo "TELEMETRY_IMAGE=$DOCKER_USERNAME/telemetry-system" > .env
+          echo "SOURCE_DIR=$(pwd)" >> .env
+          
+          # Запускаем инфраструктуру в фоновом режиме
+          docker compose up -d telemetry_server
+          
+          # Ждем инициализации сервера (рекомендуемая задержка)
+          sleep 10
+          
+          # Запускаем функциональные тесты
+          docker compose run --rm functional_tests
+          
+          # Сохраняем код возврата тестов
+          TEST_EXIT_CODE=$?
+          
+          # Останавливаем и очищаем инфраструктуру
+          docker compose down --volumes --remove-orphans
+          
+          # Выходим с кодом возврата тестов (0 = успех, иначе ошибка)
+          exit $TEST_EXIT_CODE
