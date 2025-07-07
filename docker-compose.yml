@@ -38,7 +38,7 @@ services:
     environment:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
-      - ./bin:/app:cached 
+      - ${SOURCE_DIR}/bin:/app:cached 
     networks:
       - telemetry_net
     command: ["sleep", "infinity"]
@@ -50,7 +50,7 @@ services:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
       - .${SOURCE_DIR}/bin:/app:ro
-      - ./tests/functional_tests/test_data:/app/test_data:ro
+      - ./tests/functional_tests/test_data:/app:ro
     depends_on:
       - telemetry_server
     networks:
