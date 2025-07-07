@@ -52,8 +52,11 @@ services:
       - /bin/sh
       - -c
       - |
-        mkdir -p /test_data
-        cp -r /app/test_data/* /test_data/
-        /app/functional_tests
+         # Проверяем существование файлов перед выполнением
+          echo "Contents of /app:"
+          ls -la /app
+          echo "Running functional tests..."
+          /app/functional_tests
+          
     profiles: ["test"]
 
