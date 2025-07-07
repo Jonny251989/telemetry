@@ -10,7 +10,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     container:
-      image: docker.io/jonnyrembo/telemetry-system:v1.0
+      image: docker.io/jonnyrembo/telemetry-system:latest
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         SOURCE_DIR: /workspace  # Используем /workspace
