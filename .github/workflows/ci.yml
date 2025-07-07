@@ -17,45 +17,44 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         COMMON_IMAGES_VERSION: "1.0"
-        SOURCE_DIR: ${{ github.workspace }}
+        SOURCE_DIR: /workspace  # Используем /workspace
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
-        - ${{ github.workspace }}:/github/workspace  # Монтируем в стандартный путь
+        - ${{ github.workspace }}:/workspace  # Монтируем в /workspace
       options: --privileged
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@v3
 
       - name: Build project
         run: |
-          ./build.sh
+          # Создаем build-директорию перед запуском
+          mkdir -p /workspace/build
+          ./build.sh  # Теперь скрипт будет работать
 
       - name: Run all unit tests
         run: |
-          cd /build
+          cd /workspace/build
           ctest --output-on-failure --verbose
 
       - name: Start infrastructure and run functional tests
         run: |
-          
           # Создаем .env файл
           echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
-          echo "DOCKER_IMAGE=$DOCKER_IMAGE" >> .env
-          echo "SOURCE_DIR=/github/workspace" >> .env
+          echo "DOCKER_IMAGE=$DOCKER_USERNAME/telemetry-system:v1.0" >> .env
+          echo "SOURCE_DIR=/workspace" >> .env
           
-          # Запускаем сервер
+          # Запускаем инфраструктуру
           docker compose up -d telemetry_server
           
           # Ожидание готовности сервера
-          timeout 30s sh -c 'until nc -z localhost 12345; do sleep 1; done'
+          timeout 30s sh -c 'until nc -zu localhost 12345; do sleep 1; done'
           
-          # Запускаем тесты
+          # Запускаем функциональные тесты
           docker compose run --rm functional_tests
           TEST_EXIT_CODE=$?
           
           # Останавливаем контейнеры
           docker compose down --volumes --remove-orphans
-          
           exit $TEST_EXIT_CODE
