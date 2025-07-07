@@ -54,7 +54,7 @@ services:
       - |
          # Проверяем существование файлов перед выполнением
           echo "Contents of /app:"
-          ls -la /app
+          ls -la 
           echo "Running functional tests..."
           /app/functional_tests
 
