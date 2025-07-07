@@ -36,21 +36,10 @@ jobs:
         run: |
           cd /workspace/build
           ctest --output-on-failure --verbose
-      - name: Verify Docker installation
-        run: |
-          echo "PATH: $PATH"
-          which docker || true
-          docker --version || true
-          which docker-compose || true
-          docker-compose --version || true
-          ls -la /usr/bin/docker* /usr/local/bin/docker*
+     
       - name: Start infrastructure and run functional tests
         run: |
-          ls -la 
-          echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
-          echo "DOCKER_IMAGE=$DOCKER_USERNAME/telemetry-system:v1.0" >> .env
-          echo "SOURCE_DIR=/github/workspace" >> .env
-          
+
           # Используем docker compose (как плагин)
           docker compose up -d telemetry_server
 

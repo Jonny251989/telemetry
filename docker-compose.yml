@@ -17,7 +17,7 @@ services:
       - telemetry_net
 
   telemetry_server:
-    image: telemetry-system
+    image: jonnyrembo/telemetry-system:latest
     volumes:
       - ./bin:/app:ro
       - ./server/limits.json:/limits.json:ro
@@ -32,7 +32,7 @@ services:
       - telemetry_net
 
   telemetry_client:
-    image: telemetry-system
+    image: jonnyrembo/telemetry-system:latest
     volumes:
       - ./bin:/app:ro
     networks:
@@ -41,7 +41,7 @@ services:
     profiles: ["test"]
 
   functional_tests:
-    image: telemetry-system
+    image: jonnyrembo/telemetry-system:latest
     volumes:
       - ./bin:/app:ro
     depends_on:
