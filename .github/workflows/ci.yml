@@ -36,7 +36,7 @@ jobs:
 
       - name: Build project
         run: |
-          cd workspace
+          cd /workspace
           ./build.sh
 
       - name: Run all unit tests
