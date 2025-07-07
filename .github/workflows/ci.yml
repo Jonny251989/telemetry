@@ -44,9 +44,12 @@ jobs:
       - name: Start infrastructure and run functional tests
         run: |
           ls -la 
-          docker-compose --profile test up
-          TEST_EXIT_CODE=$?
+          echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
+          echo "DOCKER_IMAGE=$DOCKER_USERNAME/telemetry-system:v1.0" >> .env
+          echo "SOURCE_DIR=/github/workspace" >> .env
           
-          # Останавливаем контейнеры
-          docker compose down --volumes --remove-orphans
-          exit $TEST_EXIT_CODE
+          # Используем docker compose (как плагин)
+          docker compose up -d telemetry_server
+
+          docker compose run --rm functional_tests
+          TEST_EXIT_CODE=$?
