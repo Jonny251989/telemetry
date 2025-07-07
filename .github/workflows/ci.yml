@@ -34,12 +34,11 @@ jobs:
 
       - name: Run all unit tests
         run: |
-          cd /workspace/build
+          cd /build
           ctest --output-on-failure --verbose
 
       - name: Start infrastructure and run functional tests
         run: |
-          cd /workspace
           
           # Создаем .env файл
           echo "DOCKER_USERNAME=$DOCKER_USERNAME" > .env
