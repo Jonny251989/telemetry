@@ -46,23 +46,16 @@ services:
 
   functional_tests:
     image: jonnyrembo/telemetry-system:latest
-    environment:
-      - SOURCE_DIR=${SOURCE_DIR}
     volumes:
       - ./bin:/app:ro
-    depends_on:
-      - telemetry_server
-    networks:
-      - telemetry_net
+      - ./tests/functional_tests/test_data:/app/test_data:ro  # Добавьте это
     command: 
       - /bin/sh
       - -c
       - |
-         # Проверяем существование файлов перед выполнением
-          echo "Contents of /app:"
-          ls -la /app/bin/tests
-          echo "Running functional tests..."
-          /app/bin/tests/functional_tests
+        mkdir -p /test_data
+        cp -r /app/test_data/* /test_data/
+        /app/functional_tests
 
-    profiles: ["test"]
+  profiles: ["test"]
 
