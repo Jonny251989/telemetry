@@ -23,7 +23,7 @@ jobs:
         - ${{ github.workspace }}:/github/workspace  # Монтируем в стандартный путь
       options: --privileged
 
-   steps:
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
