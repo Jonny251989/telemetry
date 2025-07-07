@@ -5,7 +5,6 @@ cd /build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
 
-# Копирование артефактов с абсолютными путями
 cp /build/server/telemetry_server /bin/
 cp /build/client/telemetry_client /bin/
 cp /build/tests/unit_tests/unit_tests /bin/
