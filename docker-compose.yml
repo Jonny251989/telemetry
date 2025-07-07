@@ -49,7 +49,7 @@ services:
     environment:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
-      - .${SOURCE_DIR}/bin:/app:ro
+      - ${SOURCE_DIR}/bin:/app:ro
       - ./tests/functional_tests/test_data:/app:ro
     depends_on:
       - telemetry_server
@@ -59,6 +59,8 @@ services:
       - /bin/sh
       - -c
       - |
+        ls -la ${SOURCE_DIR}
+        ls -la ${SOURCE_DIR}/bin
          mkdir -p /test_data
           cp -r /app/test_data/* /test_data/
           /app/functional_tests
