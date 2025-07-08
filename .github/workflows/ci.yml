@@ -25,8 +25,6 @@ jobs:
 
       - name: Build project
         run: |
-          # Создаем build-директорию перед запуском
-          ls -la /workspace
           mkdir -p /workspace/build
           mkdir -p /workspace/bin
           ./build.sh  # Теперь скрипт будет работать
@@ -46,6 +44,6 @@ jobs:
 
       - name: Start infrastructure and run functional tests
         run: |
-          export GITHUB_WORKSPACE=${{ github.workspace }}
+          export SOURCE_DIR=${{ github.workspace }}
           docker compose up -d telemetry_server
           docker compose run --rm functional_tests 
