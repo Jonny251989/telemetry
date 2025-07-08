@@ -25,9 +25,6 @@ jobs:
           cd /workspace/build
           ctest --output-on-failure --verbose
 
-      - name: Prepare artifacts
-        run: |
-          cp -r /workspace/bin ${{ github.workspace }}/
 
       - name: Run functional tests
         run: |
