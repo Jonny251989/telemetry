@@ -1,10 +1,12 @@
 #!/bin/bash
 set -e
 
+mkdir -p /workspace/build
 cd /workspace/build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
 
+mkdir -p /workspace/bin
 # Копирование артефактов с абсолютными путями
 cp /workspace/build/server/telemetry_server /workspace/bin/
 cp /workspace/build/client/telemetry_client /workspace/bin/
