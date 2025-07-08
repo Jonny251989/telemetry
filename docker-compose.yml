@@ -50,6 +50,7 @@ services:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
       - ${GITHUB_WORKSPACE}/bin:/app:ro  # Только один том
+      - ${GITHUB_WORKSPACE}/bin/test_data:/test_data:rw 
     depends_on:
       telemetry_server:
         condition: service_started
