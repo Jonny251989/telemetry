@@ -21,8 +21,8 @@ services:
     environment:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
-      - SOURCE_DIR/bin:/app:cached
-      - SOURCE_DIR/server/limits.json:/limits.json:ro 
+      - ${SOURCE_DIR}/bin:/app:cached
+      - ${SOURCE_DIR}/server/limits.json:/limits.json:ro 
     command: 
       - /bin/sh
       - -c
@@ -38,7 +38,7 @@ services:
     environment:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
-      - SOURCE_DIR/bin:/app:cached  # Используем GITHUB_WORKSPACE
+      - ${SOURCE_DIR}/bin:/app:cached 
     networks:
       - telemetry_net
     command: ["sleep", "infinity"]
@@ -49,8 +49,8 @@ services:
     environment:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
-      - SOURCE_DIR/bin:/app:ro  # Только один том
-      - SOURCE_DIR/bin/test_data:/test_data:rw 
+      - ${SOURCE_DIR}/bin:/app:ro  # Только один том
+      - ${SOURCE_DIR}/bin/test_data:/test_data:rw 
     depends_on:
       telemetry_server:
         condition: service_started
