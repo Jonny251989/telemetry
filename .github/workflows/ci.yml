@@ -13,7 +13,7 @@ jobs:
       image: docker.io/jonnyrembo/telemetry-system:latest
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        SOURCE_DIR: /workspace  # Используем /workspace
+        SOURCE_DIR: /workspace
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
         - ${{ github.workspace }}:/workspace 
@@ -26,8 +26,7 @@ jobs:
       - name: Build project
         run: |
           mkdir -p /workspace/build
-          mkdir -p /workspace/bin
-          ./build.sh  # Теперь скрипт будет работать
+          ./build.sh
 
       - name: Run all unit tests
         run: |
