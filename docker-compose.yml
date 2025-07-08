@@ -50,7 +50,7 @@ services:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
       - ${SOURCE_DIR}/bin:/app:ro  # Только один том
-      - ${SOURCE_DIR}S/bin/test_data:/test_data:rw 
+      - ${SOURCE_DIR}/bin/test_data:/test_data:rw 
     depends_on:
       telemetry_server:
         condition: service_started
