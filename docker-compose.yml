@@ -21,8 +21,8 @@ services:
     environment:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
-      - ./bin:/app:cached 
-      - ./server/limits.json:/limits.json:ro
+      - ${GITHUB_WORKSPACE}/bin:/app:cached
+      - ${GITHUB_WORKSPACE}/server/limits.json:/limits.json:ro  # Абсолютный путь
     command: 
       - /bin/sh
       - -c
@@ -38,7 +38,7 @@ services:
     environment:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
-      - ${SOURCE_DIR}/bin:/app:cached 
+      - ${GITHUB_WORKSPACE}/bin:/app:cached  # Используем GITHUB_WORKSPACE
     networks:
       - telemetry_net
     command: ["sleep", "infinity"]
@@ -49,23 +49,16 @@ services:
     environment:
       - SOURCE_DIR=${SOURCE_DIR}
     volumes:
-      - ${SOURCE_DIR}/bin:/app:ro
-      - ./tests/functional_tests/test_data:/app:ro
+      - ${GITHUB_WORKSPACE}/bin:/app:ro  # Только один том
     depends_on:
-      - telemetry_server
+      telemetry_server:
+        condition: service_started
     networks:
       - telemetry_net
     command: 
       - /bin/sh
-      - -c  
+      - -c
       - |
-        ls -la ./
-        ls -la ./bin
-        ls -la ${SOURCE_DIR}
-        ls -la ${SOURCE_DIR}/bin
-         mkdir -p /test_data
-          cp -r /app/test_data/* /test_data/
-          /app/functional_tests
-
+        # Тестовые данные уже в /app/test_data (из bin/test_data)
+        /app/functional_tests --test-data /app/test_data
     profiles: ["test"]
-
