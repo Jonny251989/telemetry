@@ -5,6 +5,8 @@ docker-compose run --rm builder
 
 docker-compose --profile test up
 
+docker-compose --profile test down
+
 ./server/telemetry_server 12345 ./server/limits.json
 
 ./client/telemetry_client localhost 12345

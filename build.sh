@@ -1,24 +1,36 @@
 #!/bin/bash
 set -e
 
-mkdir -p /workspace/build
-cd /workspace/build
-cmake -DCMAKE_BUILD_TYPE=Release ..
+# Определяем корневую директорию проекта
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$SCRIPT_DIR"
+
+# Создаем директорию сборки
+BUILD_DIR="$PROJECT_ROOT/build"
+mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
+
+# Конфигурируем и собираем проект
+cmake -DCMAKE_BUILD_TYPE=Release "$PROJECT_ROOT"
 make -j$(nproc)
 
-mkdir -p /workspace/bin
-# Копирование артефактов с абсолютными путями
-cp /workspace/build/server/telemetry_server /workspace/bin/
-cp /workspace/build/client/telemetry_client /workspace/bin/
-cp /workspace/build/tests/unit_tests/unit_tests /workspace/bin/
-cp /workspace/build/tests/functional_tests/functional_tests /workspace/bin/
+# Создаем директорию для артефактов
+BIN_DIR="$PROJECT_ROOT/bin"
+mkdir -p "$BIN_DIR"
+
+# Копирование артефактов
+cp "$BUILD_DIR/server/telemetry_server" "$BIN_DIR/"
+cp "$BUILD_DIR/client/telemetry_client" "$BIN_DIR/"
+cp "$BUILD_DIR/tests/unit_tests/unit_tests" "$BIN_DIR/"
+cp "$BUILD_DIR/tests/functional_tests/functional_tests" "$BIN_DIR/"
 
 # Копирование тестовых данных
-mkdir -p /workspace/bin/test_data
-cp -r /workspace/tests/functional_tests/test_data/* /workspace/bin/test_data/
-cp -r /workspace/tests/functional_tests/test_scripts/* /workspace/bin/test_data/
+TEST_DATA_DIR="$BIN_DIR/test_data"
+mkdir -p "$TEST_DATA_DIR"
+cp -r "$PROJECT_ROOT/tests/functional_tests/test_data/"* "$TEST_DATA_DIR/"
+cp -r "$PROJECT_ROOT/tests/functional_tests/test_scripts/"* "$TEST_DATA_DIR/"
 
-# Устанавливаем права на ВСЕ файлы
-chmod -R +x /workspace/bin/*
+# Устанавливаем права
+chmod -R +x "$BIN_DIR"/*
 
 echo "Build completed successfully!"
