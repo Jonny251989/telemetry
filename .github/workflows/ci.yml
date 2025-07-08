@@ -1,45 +1,47 @@
-name: Telemetry System CI/CD
+name: telemetry-system CI/CD
 
-on: [push, pull_request]
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
 
 jobs:
-  build-test:
+  build-and-test:
     runs-on: ubuntu-latest
     container:
       image: docker.io/jonnyrembo/telemetry-system:latest
       env:
-        SOURCE_DIR: /workspace
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        SOURCE_DIR: /workspace  # Используем /workspace
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
-        - ${{ github.workspace }}:/workspace
+        - ${{ github.workspace }}:/workspace 
       options: --privileged
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Build and test
+      - name: Build project
         run: |
-          # Создаем необходимые директории
-          mkdir -p /workspace/{build,bin}
-          
-          # Сборка проекта
-          ./build.sh
-          
-          # Запуск unit-тестов
+          ./build.sh  # Теперь скрипт будет работать
+
+      - name: Run all unit tests
+        run: |
           cd /workspace/build
           ctest --output-on-failure --verbose
+     
 
       - name: Prepare artifacts
         run: |
-          # Копируем артефакты на хост раннера
-          cp -r /workspace/bin ${{ github.workspace }}/
+          # Копируем из контейнера CI на хост runner
+          mkdir -p ${{ github.workspace }}/bin
+          cp -r /workspace/bin/* ${{ github.workspace }}/bin/
 
-      - name: Run functional tests
+
+      - name: Start infrastructure and run functional tests
         run: |
-          # Генерируем .env для Docker Compose
-          echo "SOURCE_DIR=${{ github.workspace }}" > .env
-          
-          # Запускаем тестовую инфраструктуру
+          export SOURCE_DIR=${{ github.workspace }}
           docker compose up -d telemetry_server
-          docker compose run --rm functional_tests
+          docker compose run --rm functional_tests 
