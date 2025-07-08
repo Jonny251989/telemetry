@@ -48,3 +48,4 @@ jobs:
         run: |
           export GITHUB_WORKSPACE=${{ github.workspace }}
           docker compose up -d telemetry_server
+          docker compose run --rm functional_tests 
