@@ -11,6 +11,7 @@ class UdpServer {
 public:
     UdpServer(boost::asio::io_context& io_context, uint16_t port, const std::string& config_path);
     void start_receive();
+    void stop();
 
 private:
     void handle_receive(const boost::system::error_code& error, size_t bytes);

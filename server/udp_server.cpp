@@ -20,13 +20,20 @@ void UdpServer::send_response(const std::array<uint8_t, 2>& response) {
     socket_.async_send_to(
         boost::asio::buffer(response),
         remote_endpoint_,
-        [this, response](const boost::system::error_code& error, size_t) {
-            start_receive();
+        [this](const boost::system::error_code& error, size_t) {
+            if (error != boost::asio::error::operation_aborted) {
+                start_receive();
+            }
         }
     );
 }
 
 void UdpServer::handle_receive(const boost::system::error_code& error, size_t bytes) {
+
+    if (error == boost::asio::error::operation_aborted) {
+        return;
+    }
+
     if (error) {
         std::cerr << "Receive error: " << error.message() << "\n";
         send_response({2,0});
@@ -45,5 +52,11 @@ void UdpServer::handle_receive(const boost::system::error_code& error, size_t by
         send_response({0,1});
     } else {
         send_response({0,0});
+    }
+}
+
+void UdpServer::stop() {
+    if (socket_.is_open()) {
+        socket_.close();
     }
 }
