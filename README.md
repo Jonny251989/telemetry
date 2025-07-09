@@ -24,17 +24,21 @@ docker-compose exec telemetry_client /bin/sh
 для этого необходимо:
 
 создать конфигурационный файл: 
+
 echo "SOURCE_DIR=$(pwd)" > .env
 
 
 собрать образ
+
 docker compose build builder
 
 
 собрать проект в контейнере 
+
 docker compose run --rm builder
 
 запустить тестовую инфраструктуры
+
 docker compose --profile test up -d
 
 остановить систему
