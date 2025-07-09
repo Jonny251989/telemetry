@@ -7,7 +7,7 @@
 chmod +x build.sh
 ./build.sh
 
-# Запуск клиент-серверной системы:
+# Запуск клиент-серверной системы локально:
 
 ./bin/telemetry_server <PORT> <CONFIG_PATH>
 Пример: ./bin/telemetry_server 12345 ./server/limits.json
@@ -15,7 +15,7 @@ chmod +x build.sh
 ./bin/telemetry_client <HOST> <PORT>
 Пример: ./bin/telemetry_client localhost 12345
 
-#  клиент-серверной системы в Docker Compose среде:
+# в Docker Compose среде:
 
 docker-compose up telemetry_server telemetry_client
 
