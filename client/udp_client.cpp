@@ -42,19 +42,9 @@ void UdpClient::validate_input(T& value_ref, T min, T max, const std::string& fi
             std::cout << "Error reading input. Please try again.\n";
             continue;
         }
-        try {
-            size_t pos;
-            long value = std::stol(input_line, &pos);
-            if (pos != input_line.size()) {
-                std::cout << "Invalid input: extra characters after number. Please try again.\n";
-                continue;
-            }
-            value_ref = static_cast<T>(value);
-        }
-        catch (...) {
-            std::cout << "Invalid input: not a valid number. Please try again.\n";
-            continue;
-        }
+        size_t pos;
+        long value = std::stol(input_line, &pos);
+        value_ref = static_cast<T>(value);
 
         if (value_ref < min || value_ref > max) {
             std::cout << "Error: Value must be between " << min << " and " << max << ".\n";
