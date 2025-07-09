@@ -34,7 +34,6 @@ void UdpClient::validate_input(T& value_ref, T min, T max, const std::string& fi
             std::cout << "Enter " << field << " [" << min << "-" << max << "]: ";
             std::string input_line;
             
-            // Handle EOF and read errors
             if (!std::getline(std::cin, input_line)) {
                 if (std::cin.eof()) {
                     throw std::runtime_error("End of input reached");
