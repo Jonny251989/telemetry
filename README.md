@@ -1,4 +1,4 @@
-# Инструкция по сборке проекта локальна под Линукс
+# Инструкция по сборке проекта локально под Линукс
 
 
 
@@ -15,7 +15,7 @@ chmod +x build.sh
 ./bin/telemetry_client <HOST> <PORT>
 Пример: ./bin/telemetry_client localhost 12345
 
-#  клиент-серверной системы в докер-компоуз среде:
+#  клиент-серверной системы в Docker Compose среде:
 
 docker-compose up telemetry_server telemetry_client
 

@@ -30,37 +30,43 @@ void UdpClient::run() {
 template <typename T>
 void UdpClient::validate_input(T& value_ref, T min, T max, const std::string& field) {
     while (true) {
-        std::cout << "Enter " << field << " [" << min << "-" << max << "]: ";
-        std::string input_line;
-        if (!std::getline(std::cin, input_line)) {
-            if (std::cin.eof()) {
-                throw std::runtime_error("End of input reached");
+        try {
+            std::cout << "Enter " << field << " [" << min << "-" << max << "]: ";
+            std::string input_line;
+            
+            // Handle EOF and read errors
+            if (!std::getline(std::cin, input_line)) {
+                if (std::cin.eof()) {
+                    throw std::runtime_error("End of input reached");
+                }
+                throw std::runtime_error("Error reading input");
             }
-            throw std::runtime_error("Error reading input");
-        }
 
-        std::stringstream ss(input_line);
-        T value;
-        ss >> value;
-        
-        if (ss.fail()) {
-            std::cout << "Invalid input: not a valid number. Please try again.\n";
-            continue;
-        }
-        
-        char remaining;
-        if (ss >> remaining) {
-            std::cout << "Invalid input: extra characters after number. Please try again.\n";
-            continue;
-        }
+            std::stringstream ss(input_line);
+            T value;
+            ss >> value;
+            
+            if (ss.fail()) {
+                throw std::invalid_argument("Invalid input: not a valid number");
+            }
+            
+            char remaining;
+            if (ss >> remaining) {
+                throw std::invalid_argument("Invalid input: extra characters after number");
+            }
 
-        if (value < min || value > max) {
-            std::cout << "Error: Value must be between " << min << " and " << max << ".\n";
-            continue;
-        }
+            if (value < min || value > max) {
+                std::ostringstream oss;
+                oss << "Value must be between " << min << " and " << max;
+                throw std::out_of_range(oss.str());
+            }
 
-        value_ref = value;
-        break;
+            value_ref = value;
+            return; 
+        }
+        catch (const std::exception& e) {
+            std::cout << e.what() << ". Please try again.\n";
+        }
     }
 }
 

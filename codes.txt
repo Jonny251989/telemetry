@@ -74,17 +74,3 @@ std::optional<TelemetryData> unpack_data(uint64_t packet) {
     
     return data;
 }
-
- try {
-            size_t pos;
-            long value = std::stol(input_line, &pos);
-            if (pos != input_line.size()) {
-                std::cout << "Invalid input: extra characters after number. Please try again.\n";
-                continue;
-            }
-            value_ref = static_cast<T>(value);
-        }
-        catch (...) {
-            std::cout << "Invalid input: not a valid number. Please try again.\n";
-            continue;
-        }

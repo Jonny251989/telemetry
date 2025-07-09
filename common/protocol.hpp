@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iomanip>
 #include <optional>
+#include <memory>
 
 #pragma pack(push, 1)
 

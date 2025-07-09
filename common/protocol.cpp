@@ -2,7 +2,7 @@
 
 uint64_t pack_data(const TelemetryData& data) {
     uint64_t packet = 0;
-    memcpy(&packet, &data, sizeof(packet));
+    std::memcpy(&packet, &data, sizeof(packet));
     
     return packet;
 }
@@ -16,7 +16,7 @@ std::optional<TelemetryData> unpack_data(uint64_t packet) {
     }
 
     TelemetryData data;
-    memcpy(&data, &packet, sizeof(data));
+    std::memcpy(&data, &packet, sizeof(data));
 
     if (data.zero1 != 0 ||
         data.zero2 != 0 || 
