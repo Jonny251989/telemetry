@@ -3,3 +3,4 @@
 /.vscode
 /build
 codes.txt.env
+.env
