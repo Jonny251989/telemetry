@@ -11,7 +11,7 @@ services:
     volumes:
       - ./:/workspace:rw 
       - ./bin:/output
-    command: /usr/local/bin/build.sh
+    command: /workspace/build.sh
     profiles: ["build"]
     networks:
       - telemetry_net
