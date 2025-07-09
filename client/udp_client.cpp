@@ -28,51 +28,42 @@ void UdpClient::run() {
     }
 }
 template <typename T>
-void UdpClient::validate_input(T& value_ref, T min, T max, const std::string& field){
-    using ValueType = std::decay_t<decltype(value_ref)>;
-        
+void UdpClient::validate_input(T& value_ref, T min, T max, const std::string& field) {
     while (true) {
         std::cout << "Enter " << field << " [" << min << "-" << max << "]: ";
         std::string input_line;
         if (!std::getline(std::cin, input_line)) {
             if (std::cin.eof()) {
-                std::cout << "Error: End of input reached. Exiting.\n";
-                exit(1);
+                throw std::runtime_error("End of input reached");
             }
-            std::cout << "Error reading input. Please try again.\n";
-            continue;
+            throw std::runtime_error("Error reading input");
         }
 
-        try {
-            size_t pos;
-            long value = std::stol(input_line, &pos);
-
-            // Пропускаем пробелы и переводы строк после числа
-            while (pos < input_line.size() && std::isspace(static_cast<unsigned char>(input_line[pos]))) {
-                ++pos;
-            }
-
-            // Если остались непробельные символы — это ошибка
-            if (pos != input_line.size()) {
-                std::cout << "Invalid input: extra characters after number. Please try again.\n";
-                continue;
-            }
-
-            value_ref = static_cast<T>(value);
-
-            if (value_ref < min || value_ref > max) {
-                std::cout << "Error: Value must be between " << min << " and " << max << ".\n";
-                continue;
-            }
-
-            break;
-        } catch (const std::exception&) {
+        std::stringstream ss(input_line);
+        T value;
+        ss >> value;
+        
+        if (ss.fail()) {
             std::cout << "Invalid input: not a valid number. Please try again.\n";
             continue;
         }
+        
+        // Check for trailing non-whitespace characters
+        char remaining;
+        if (ss >> remaining) {
+            std::cout << "Invalid input: extra characters after number. Please try again.\n";
+            continue;
+        }
+
+        if (value < min || value > max) {
+            std::cout << "Error: Value must be between " << min << " and " << max << ".\n";
+            continue;
+        }
+
+        value_ref = value;
+        break;
     }
 }
-
 
 TelemetryData UdpClient::input_telemetry_data() {
     TelemetryData data{};
