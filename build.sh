@@ -1,9 +1,14 @@
 #!/bin/bash
 set -e
 
-# Определяем корневую директорию проекта
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT_ROOT="$SCRIPT_DIR"
+if [ -f /.dockerenv ]; then
+    # Внутри Docker
+    PROJECT_ROOT="/workspace"
+else
+    # Вне Docker (на хосте)
+    SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    PROJECT_ROOT="$SCRIPT_DIR"
+fi
 
 # Создаем директорию сборки
 BUILD_DIR="$PROJECT_ROOT/build"
