@@ -12,6 +12,12 @@ chmod +x build.sh
 ./bin/telemetry_client <HOST> <PORT>
 Пример: ./bin/telemetry_client localhost 12345
 
+Запуск клиент-серверной системы в докер-компоуз среде:
+
+docker-compose up telemetry_server telemetry_client
+
+docker-compose exec telemetry_client /bin/sh
+/app/telemetry_client telemetry_server 12345
 
 Для проверки корректности работы модели можно выполнить функциональные тесты, используя для этого Docker Compose
 

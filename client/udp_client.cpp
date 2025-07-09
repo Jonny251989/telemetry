@@ -48,7 +48,6 @@ void UdpClient::validate_input(T& value_ref, T min, T max, const std::string& fi
             continue;
         }
         
-        // Check for trailing non-whitespace characters
         char remaining;
         if (ss >> remaining) {
             std::cout << "Invalid input: extra characters after number. Please try again.\n";
