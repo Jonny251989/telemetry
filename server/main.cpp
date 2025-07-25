@@ -6,7 +6,7 @@
 int main(int argc, char* argv[]) {
     try {
         if (argc != 3) {
-            std::cerr << "Usage: server <port> <config_path>\n";
+            std::cout << "Usage: server <port> <config_path>\n";
             return 1;
         }
 
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
         
         std::cout << "Server stopped gracefully" << std::endl;
     } catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << "\n";
+        std::cout << "Exception: " << e.what() << "\n";
     }
     return 0;
 }

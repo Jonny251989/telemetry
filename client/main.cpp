@@ -10,14 +10,14 @@ int main(int argc, char* argv[]) {
     setlocale(LC_ALL, "C");
     try {
         if (argc != 3) {
-            std::cerr << "Usage: " << argv[0] << " <host> <port>\n";
+            std::cout << "Usage: " << argv[0] << " <host> <port>\n";
             return 1;
         }
         UdpClient client(argv[1], argv[2]);
         client.run();
         
     } catch (const std::exception& e) {
-        std::cerr << "Client exception: " << e.what() << "\n";
+        std::cout << "Client exception: " << e.what() << "\n";
         return 1;
     }
     return 0;
