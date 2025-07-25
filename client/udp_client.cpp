@@ -1,30 +1,25 @@
 #include "udp_client.hpp"
 
 UdpClient::UdpClient(const char* host, const char* port)
-    : resolver_(io_context_),
-      socket_(io_context_)
+    : resolver_(io_context_), socket_(io_context_, boost::asio::ip::udp::v4()) 
 {
-    endpoints_ = resolver_.resolve(host, port);
-    socket_.open(boost::asio::ip::udp::v4());
+    endpoints_ = resolver_.resolve(boost::asio::ip::udp::v4(), host, port);
+    server_endpoint_ = *endpoints_.begin();
 }
 
 void UdpClient::run() {
     while (true) {
         TelemetryData data = input_telemetry_data();
         uint64_t packet = pack_data(data);
-        
         send_udp_packet(packet);
-        std::array<uint8_t, 2> response = receive_udp_response();
+        
+        auto response = receive_udp_response();
         analyse_server_response(response);
-
+        
         std::cout << "Continue? (y/n): ";
         std::string answer;
         std::getline(std::cin, answer);
-        
-        if (answer == "n" || answer == "N") {
-            std::cout << "Exiting client\n";
-            break;
-        }
+        if (answer == "n" || answer == "N") break;
     }
 }
 template <typename T>

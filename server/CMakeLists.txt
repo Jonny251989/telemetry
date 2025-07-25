@@ -3,6 +3,7 @@ set(target telemetry_server)
 add_executable(${target}
     main.cpp
     udp_server.cpp
+    thread_pool.cpp
     data_validator.cpp
 )
 

@@ -36,7 +36,7 @@ docker compose build builder
 docker compose run --rm builder
 
 # запустить тестовую инфраструктуры: 
-docker compose --profile test up -d
+docker compose --profile test up
 
 # остановить систему: 
 docker compose --profile test down
